@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- CSS -->
+    
+    
+<style>
+  @import url('stylenew.css');
+</style>
+<!-- HTML -->
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TO_DO list</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700.." rel="stylesheet">
+<link ref= "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normal..">
+<link ref ="stylesheet" href ="stylenew.css">
+<body>
+    <!-- Start App -->
+    
+    <div id="app">
+      <div class="header">
+        <div class="container">
+          
+            <script>
+                var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        
+        today = mm + '/' + dd + '/' + yyyy;
+        document.write(today);
+         type="text/javascript">
+        
+        
+        /* функция получения текущей даты и времени */
+        function date_time()
+        {
+        var current_datetime = new Date();
+        var day = zero_first_format(current_datetime.getDate());
+        var month = zero_first_format(current_datetime.getMonth()+1);
+        var year = current_datetime.getFullYear();
+        
+        return day+"."+month+"."+year+" ";
+        }
+        </script>
+          <div class="logo"> Today</div>
+          <p>  </p>
+          <div class="menu" style="float:right;">
+          <div v-on:click='showDropdown' >
+            <button class="dropbtn">...</button>
+        </div>
+        <div v-if="isShowDropdown" class="menu-style" >
+          <a href="#" v-on:click="visible1=!visible1" >In progress</a>
+          <a href="#" v-on:click="visible2=!visible2">Complited</a>
+          <a href="#" v-on:click="visible3=!visible3">Removed </a>
+
+            <!-- <div><button v-on:click="visible1=!visible1, showProgress" >In progress</button></div>
+            <div><button v-on:click="visible2=!visible2, showComplited">Complited</button></div>
+            <div><button v-on:click="visible3=!visible3, showRemoved">Removed</button></div> -->
+        </div>
+      </div>
+          <p> </p>
+        </div>
+      </div>
+      <div class="container" v-show="visible1">
+        <h2>
+          <span >In progress </span>
+          <!-- <span class="mask-num">{{ needDoList.length }}</span> -->
+        </h2>
+        <ul class="mask-list">
+          <li
+            v-for="(mask, index) in needDoList"
+            :key="mask.id"
+          >
+            <div>
+              <input type="checkbox" v-on:change="doCheck(index, 'need')"/>
+              <span>{{ mask.title }}</span>
+            </div>
+            <button class="btn-circle" v-on:click="removeMaskD(index, 'remove')">x</button>
+          </li>
+        </ul>
+      </div>
+      <div class="container" v-show="visible2">
+        <h2>
+          <span >Completed</span>
+          <!-- <span class="mask-num">{{ completeList.length }}</span> -->
+        </h2>
+        <ul class="mask-list complete-list">
+          <li
+            v-for="(mask, index) in completeList"
+            :key="mask.id"
+          >
+          
+            <div>
+              <input type="checkbox" v-on:change="doCheck(index, 'complete')"  checked>
+              <span>{{ mask.title }}</span>
+            </div>
+            <button class="btn-circle" v-on:click="removeMaskD1(index, 'remove')">x</button>
+          </li>
+        </ul>
+      </div>
+      <div class="container" v-show="visible3">
+        <h2>
+          <span >Removed </span>
+          <!-- <span class="mask-num">{{ needDoList.length }}</span> -->
+        </h2>
+        <ul class="mask-list remove-list">
+          <li
+            v-for="(mask, index) in removeList"
+            :key="mask.id"
+          >
+            <div>
+              <input type="checkbox" v-on:change="doCheck(index, 'remove')"/> 
+              <span>{{ mask.title }}</span>
+            </div>
+            <button class="btn-circle" v-on:click="removeMask(index, 'garbage')">x</button>
+          </li>
+        </ul>
+      </div>
+    <div class="container">
+        <div class="form">
+          <button class="btn-add"v-on:click="clickHide">+</button>
+         <h class ="create-itemtxt" v-show="visibleTask"> Create new Item</h>
+         
+            <input class="inputNew" v-show="visibleCreate===false" type="text" v-bind:value="valueInput" v-on:input="handleInput" v-on:keypress.enter="addTask">
+          </div>
+      </div>
+    </div>
+      
+    </div>
+    <!-- End App -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="./app.js"></script>
+   
+    <script>
+        Vue.createApp({
+
+    data() {
+      return {
+        valueInput: '',
+        needDoList: [],
+        completeList: [],
+        removeList: [],
+        garbageList: [],
+        isShowDropdown: false,
+        visible1: true,
+        visible2: false,
+        visible3: false,
+        visibleCreate: true,
+        visibleTask: true,
+      };
+    },
+    methods: {
+      handleInput (event) {
+        this.valueInput = event.target.value;
+      },
+  
+  
+      showDropdown() {
+            console.log(this.isShowDropdown);
+            this.isShowDropdown=!this.isShowDropdown
+            console.log(this.isShowDropdown);
+        },
+        clickHide(){
+      if(this.visibleCreate===true){
+        this.visibleCreate=!this.visibleCreate;
+          this.visibleTask=!this.visibleTask;
+      }
+          else{
+            this.addTask();
+          }
+
+        },
+      addTask () {
+        if(this.valueInput === "") { return };
+      
+        this.needDoList.push({
+          title: this.valueInput,
+          id: Math.random()
+        });
+        this.valueInput = '';
+      },
+      
+      doCheck (index, type) {
+  
+        if(type === 'need') {
+          const completeMask = this.needDoList.splice(index, 1);
+          this.completeList.push(...completeMask);
+        }
+        
+        else if (type === 'complete'){
+          const noCompleteMask = this.completeList.splice(index, 1);
+          this.needDoList.push(...noCompleteMask);
+        }
+      },
+      removeMask (index, type) {
+        if(type==='garbage'){
+          const garbage1 = this.removeList.splice(index,1);
+          this.garbageList.push(...garbage1);
+        }
+      },
+      removeMaskD (index, type){
+       
+        if(type==='remove'){
+          const delitMask = this.needDoList.splice(index,1);
+          this.removeList.push(...delitMask);
+          
+        }
+      },
+      removeMaskD1 (index, type){
+       
+       if(type==='remove'){
+        const delitMask1 = this.completeList.splice(index,1);
+          this.removeList.push(...delitMask1);
+       }
+     }
+    }
+  }
+  ).mount('#app');
+    </script>
+  </body>
+</html>
